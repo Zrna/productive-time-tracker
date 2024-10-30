@@ -32,7 +32,7 @@ describe('Date', () => {
 
     it('should handle month transition correctly', () => {
       const mockDate = new Date('2024-10-31T00:00:00Z');
-      expect(getTomorrowDate(mockDate)).toBe('2024-11-1');
+      expect(getTomorrowDate(mockDate)).toBe('2024-11-01');
     });
   });
 });
