@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { useOrganizationMemberships } from './hooks/api/organization';
-import { useTimeEntries } from './hooks/api/time-entries';
+import { useDeleteTimeEntry, useTimeEntries } from './hooks/api/time-entries';
 import { getTomorrowDate, getYesterdayDate } from './utils/date';
 
 function TimeTracker() {
@@ -19,6 +20,24 @@ function TimeTracker() {
       enabled: !!personId,
     }
   );
+  const { mutateAsync: deleteTimeEntry, isPending: isDeletingTimeEntry } =
+    useDeleteTimeEntry();
+
+  const [timeEntryDeletingId, setTimeEntryDeletingId] = useState('');
+
+  const handleDelete = async (id: string) => {
+    const isConfirmed = window.confirm(
+      'Are you sure you want to delete this entry?'
+    );
+
+    if (!isConfirmed) {
+      return;
+    }
+
+    setTimeEntryDeletingId(id);
+    await deleteTimeEntry(id);
+    setTimeEntryDeletingId('');
+  };
 
   return (
     <div>
@@ -31,22 +50,40 @@ function TimeTracker() {
             <p>No time entries</p>
           ) : (
             timeEntries?.data.map(entry => (
-              <div
-                key={entry.id}
-                style={{
-                  border: '2px solid black',
-                  padding: '8px',
-                  margin: '8px',
-                }}
-              >
-                <p>Date: {entry.attributes.date}</p>
-                <p>Time: {entry.attributes.time}</p>
-                <p>
-                  Note:{' '}
-                  <span
-                    dangerouslySetInnerHTML={{ __html: entry.attributes.note }}
-                  />
-                </p>
+              <div key={entry.id} style={{ position: 'relative' }}>
+                {isDeletingTimeEntry && timeEntryDeletingId === entry.id && (
+                  <p style={{ position: 'absolute', left: '50%' }}>
+                    Deleting...
+                  </p>
+                )}
+                <div
+                  style={{
+                    border: '2px solid black',
+                    padding: '8px',
+                    margin: '8px',
+                    opacity:
+                      isDeletingTimeEntry && timeEntryDeletingId === entry.id
+                        ? 0.5
+                        : 1,
+                  }}
+                >
+                  <p>Date: {entry.attributes.date}</p>
+                  <p>Time: {entry.attributes.time}</p>
+                  <p>
+                    Note:{' '}
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: entry.attributes.note,
+                      }}
+                    />
+                  </p>
+                  <button
+                    onClick={() => handleDelete(entry.id)}
+                    disabled={isDeletingTimeEntry}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             ))
           )}

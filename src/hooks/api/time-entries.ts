@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
-import { getTimeEntries } from '../../apis/time-entries';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { deleteTimeEntry, getTimeEntries } from '../../apis/time-entries';
 
 interface UseTimeEntriesProps {
   params?: string;
@@ -11,5 +11,19 @@ export const useTimeEntries = ({ enabled, params }: UseTimeEntriesProps) => {
     queryKey: ['timeEntries'],
     queryFn: () => getTimeEntries(params),
     enabled: enabled,
+  });
+};
+
+export const useDeleteTimeEntry = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => await deleteTimeEntry(id),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['timeEntries'] });
+    },
+    onError: error => {
+      console.error(error);
+    },
   });
 };

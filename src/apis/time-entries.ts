@@ -6,3 +6,7 @@ export const getTimeEntries = async (params?: string) => {
     `/time_entries${params ? `?${params}` : ''}`
   );
 };
+
+export const deleteTimeEntry = async (id: string) => {
+  return await backend.delete(`/time_entries/${id}`);
+};
