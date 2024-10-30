@@ -1,5 +1,6 @@
 import { useOrganizationMemberships } from './hooks/api/organization';
 import { useTimeEntries } from './hooks/api/time-entries';
+import { getTomorrowDate, getYesterdayDate } from './utils/date';
 
 function TimeTracker() {
   const { data: orgMemberships, isLoading: isLoadingOrgMemberships } =
@@ -9,9 +10,12 @@ function TimeTracker() {
     category => category.type === 'people'
   )?.id;
 
+  const yesterday = getYesterdayDate(new Date());
+  const tomorrow = getTomorrowDate(new Date());
+
   const { data: timeEntries, isLoading: isLoadingTimeEntries } = useTimeEntries(
     {
-      params: `filter[after]=2024-10-29&filter[before]=2024-10-31&filter[person_id]=${personId}`,
+      params: `filter[after]=${yesterday}&filter[before]=${tomorrow}&filter[person_id]=${personId}`,
       enabled: !!personId,
     }
   );
