@@ -18,3 +18,11 @@ export interface TimeEntries {
   links: Links;
   meta: TimeEntriesMeta;
 }
+
+export interface CreateTimeEntry {
+  date: string;
+  personId: string;
+  time: number;
+  note: string;
+  serviceId: string;
+}

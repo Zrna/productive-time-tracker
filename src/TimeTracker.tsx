@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useOrganizationMemberships } from './hooks/api/organization';
 import { useDeleteTimeEntry, useTimeEntries } from './hooks/api/time-entries';
 import { formatDate } from './utils/date';
+import { CreateTimeEntryForm } from './components/CreateTimeEntryForm';
 
 function TimeTracker() {
   const { data: orgMemberships, isLoading: isLoadingOrgMemberships } =
@@ -19,6 +20,7 @@ function TimeTracker() {
       enabled: !!personId,
     }
   );
+
   const { mutateAsync: deleteTimeEntry, isPending: isDeletingTimeEntry } =
     useDeleteTimeEntry();
 
@@ -44,48 +46,75 @@ function TimeTracker() {
       {isLoadingOrgMemberships || isLoadingTimeEntries ? (
         <h3>Loading...</h3>
       ) : (
-        <div>
-          {!timeEntries || timeEntries?.data.length === 0 ? (
-            <p>No time entries</p>
-          ) : (
-            timeEntries?.data.map(entry => (
-              <div key={entry.id} style={{ position: 'relative' }}>
-                {isDeletingTimeEntry && timeEntryDeletingId === entry.id && (
-                  <p style={{ position: 'absolute', left: '50%' }}>
-                    Deleting...
-                  </p>
-                )}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: '16px',
+            width: '100%',
+            backgroundColor: '#f7f9fc',
+            padding: '16px',
+          }}
+        >
+          <CreateTimeEntryForm personId={personId} />
+          <div
+            style={{
+              width: '66%',
+              height: '85dvh',
+              overflow: 'auto',
+            }}
+          >
+            {!timeEntries || timeEntries?.data.length === 0 ? (
+              <p>No time entries</p>
+            ) : (
+              timeEntries?.data.map(entry => (
                 <div
+                  key={entry.id}
                   style={{
-                    border: '2px solid black',
+                    position: 'relative',
                     padding: '8px',
-                    margin: '8px',
-                    opacity:
-                      isDeletingTimeEntry && timeEntryDeletingId === entry.id
-                        ? 0.5
-                        : 1,
                   }}
                 >
-                  <p>Date: {entry.attributes.date}</p>
-                  <p>Time: {entry.attributes.time}</p>
-                  <p>
-                    Note:{' '}
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html: entry.attributes.note,
-                      }}
-                    />
-                  </p>
-                  <button
-                    onClick={() => handleDelete(entry.id)}
-                    disabled={isDeletingTimeEntry}
+                  {isDeletingTimeEntry && timeEntryDeletingId === entry.id && (
+                    <p style={{ position: 'absolute', left: '50%' }}>
+                      Deleting...
+                    </p>
+                  )}
+                  <div
+                    style={{
+                      backgroundColor: '#fff',
+                      border: '1px solid #dfe5f5',
+                      borderRadius: '4px',
+                      padding: '12px',
+                      margin: '8px',
+                      opacity:
+                        isDeletingTimeEntry && timeEntryDeletingId === entry.id
+                          ? 0.5
+                          : 1,
+                    }}
                   >
-                    Delete
-                  </button>
+                    <p>Date: {entry.attributes.date}</p>
+                    <p>Time: {entry.attributes.time}</p>
+                    <p>
+                      Note:{' '}
+                      <span
+                        dangerouslySetInnerHTML={{
+                          __html: entry.attributes.note,
+                        }}
+                      />
+                    </p>
+                    <button
+                      onClick={() => handleDelete(entry.id)}
+                      disabled={isDeletingTimeEntry}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))
-          )}
+              ))
+            )}
+          </div>
         </div>
       )}
     </div>

@@ -1,5 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { deleteTimeEntry, getTimeEntries } from '../../apis/time-entries';
+import {
+  createTimeEntry,
+  deleteTimeEntry,
+  getTimeEntries,
+} from '../../apis/time-entries';
+import { CreateTimeEntry } from '../../interfaces/time-entries';
 
 interface UseTimeEntriesProps {
   params?: string;
@@ -20,6 +25,22 @@ export const useDeleteTimeEntry = () => {
 
   return useMutation({
     mutationFn: async (id: string) => await deleteTimeEntry(id),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['timeEntries'] });
+    },
+    onError: error => {
+      console.error(error);
+    },
+  });
+};
+
+export const useCreateTimeEntry = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: CreateTimeEntry) => {
+      await createTimeEntry(data);
+    },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['timeEntries'] });
     },
