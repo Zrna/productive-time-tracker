@@ -1,4 +1,5 @@
 import { TimeEntries as TimeEntriesIf } from '../interfaces/time-entries';
+import { formatTimeDuration } from '../utils/time';
 
 interface TimeEntriesProps {
   timeEntries: TimeEntriesIf | undefined;
@@ -36,7 +37,7 @@ export const TimeEntries: React.FC<TimeEntriesProps> = ({
             <p className='text-lg font-bold'>Acquiring new clients</p>
             <div className='flex flex-col gap-1'>
               <p>Date: {entry.attributes.date}</p>
-              <p>Time: {entry.attributes.time} min</p>
+              <p>Time: {formatTimeDuration(entry.attributes.time)}</p>
               <p>
                 Note:{' '}
                 <span

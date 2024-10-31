@@ -7,6 +7,7 @@ import { useCreateTimeEntry } from '../hooks/api/time-entries';
 import { useEffect } from 'react';
 import { formatDate } from '../utils/date';
 import { Button } from './Button';
+import { formatTimeDuration } from '../utils/time';
 
 const CreateTimeEntrySchema = z.object({
   serviceId: z.string(),
@@ -29,16 +30,17 @@ export const CreateTimeEntryForm: React.FC<CreateTimeEntryFormProps> = ({
   const {
     register,
     handleSubmit,
+    watch,
     reset,
     formState: { errors, isSubmitting, isValid },
   } = useForm<CreateTimeEntryFormData>({
     resolver: zodResolver(CreateTimeEntrySchema),
-    values: {
+    defaultValues: {
       serviceId: process.env.REACT_APP_SERVICE_ID as string,
-      time: 0,
-      note: '',
     },
   });
+
+  const enteredTime = watch('time');
 
   useEffect(() => {
     if (isTimeEntryCreated) {
@@ -67,13 +69,20 @@ export const CreateTimeEntryForm: React.FC<CreateTimeEntryFormProps> = ({
           isDisabled
           helperText='Acquiring new clients service ID is hardcoded'
         />
-        <FormField
-          type='number'
-          name='time'
-          placeholder='Time'
-          register={register}
-          error={errors.time}
-        />
+        <div className='flex gap-2 items-center'>
+          <FormField
+            type='number'
+            name='time'
+            placeholder='Time'
+            register={register}
+            error={errors.time}
+          />
+          {!isNaN(enteredTime) && (
+            <p className='text-gray-500'>
+              {formatTimeDuration(Number(enteredTime))}
+            </p>
+          )}
+        </div>
         <FormField
           type='text'
           name='note'

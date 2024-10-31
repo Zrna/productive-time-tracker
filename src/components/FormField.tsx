@@ -21,7 +21,7 @@ export const FormField: React.FC<FormFieldProps> = ({
   helperText,
 }) => {
   return (
-    <div className='flex flex-col gap-1'>
+    <div className='flex flex-col gap-1 flex-1'>
       <input
         className='border border-gray-200 rounded p-2 disabled:opacity-50 disabled:cursor-not-allowed'
         disabled={isDisabled}
