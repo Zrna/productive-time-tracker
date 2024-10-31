@@ -3,6 +3,7 @@ import { useOrganizationMemberships } from './hooks/api/organization';
 import { useDeleteTimeEntry, useTimeEntries } from './hooks/api/time-entries';
 import { formatDate } from './utils/date';
 import { CreateTimeEntryForm, Navbar, TimeEntries } from './components';
+import { useServices } from './hooks/api/services';
 
 function TimeTracker() {
   const { data: orgMemberships, isLoading: isLoadingOrgMemberships } =
@@ -16,10 +17,12 @@ function TimeTracker() {
 
   const { data: timeEntries, isLoading: isLoadingTimeEntries } = useTimeEntries(
     {
-      params: `filter[after]=${today}&filter[before]=${today}&filter[person_id]=${personId}`,
+      params: `filter[after]=${today}&filter[before]=${today}&filter[person_id]=${personId}&include=service`,
       enabled: !!personId,
     }
   );
+
+  const { data: services } = useServices();
 
   const { mutateAsync: deleteTimeEntry } = useDeleteTimeEntry();
 
@@ -43,8 +46,9 @@ function TimeTracker() {
     <div>
       <Navbar />
       <div className='flex items-center gap-16 w-full p-16 h-[90dvh]'>
-        <CreateTimeEntryForm personId={personId} />
+        <CreateTimeEntryForm personId={personId} service={services?.data[0]} />
         <TimeEntries
+          services={services}
           timeEntries={timeEntries}
           onDelete={handleDelete}
           timeEntryDeletingId={timeEntryDeletingId}

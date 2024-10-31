@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import { formatDate } from '../utils/date';
 import { Button } from './Button';
 import { formatTimeDuration } from '../utils/time';
+import { Services } from '../interfaces/services';
 
 const CreateTimeEntrySchema = z.object({
   serviceId: z.string(),
@@ -19,10 +20,12 @@ type CreateTimeEntryFormData = Omit<CreateTimeEntry, 'personId' | 'date'>;
 
 interface CreateTimeEntryFormProps {
   personId: string;
+  service: Services['data'][0] | undefined;
 }
 
 export const CreateTimeEntryForm: React.FC<CreateTimeEntryFormProps> = ({
   personId,
+  service,
 }) => {
   const { mutateAsync: createTimeEntry, isSuccess: isTimeEntryCreated } =
     useCreateTimeEntry();
@@ -32,15 +35,20 @@ export const CreateTimeEntryForm: React.FC<CreateTimeEntryFormProps> = ({
     handleSubmit,
     watch,
     reset,
+    setValue,
     formState: { errors, isSubmitting, isValid },
   } = useForm<CreateTimeEntryFormData>({
     resolver: zodResolver(CreateTimeEntrySchema),
-    defaultValues: {
-      serviceId: process.env.REACT_APP_SERVICE_ID as string,
-    },
   });
 
   const enteredTime = watch('time');
+
+  useEffect(() => {
+    if (service) {
+      setValue('serviceId', service.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [service]);
 
   useEffect(() => {
     if (isTimeEntryCreated) {
@@ -67,7 +75,11 @@ export const CreateTimeEntryForm: React.FC<CreateTimeEntryFormProps> = ({
           name='serviceId'
           register={register}
           isDisabled
-          helperText='Acquiring new clients service ID is hardcoded'
+          helperText={
+            service
+              ? `The "${service.attributes.name}" service is hardcoded`
+              : ''
+          }
         />
         <div className='flex gap-2 items-center'>
           <FormField
