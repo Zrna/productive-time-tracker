@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useOrganizationMemberships } from './hooks/api/organization';
 import { useDeleteTimeEntry, useTimeEntries } from './hooks/api/time-entries';
-import { getTomorrowDate, getYesterdayDate } from './utils/date';
+import { formatDate } from './utils/date';
 
 function TimeTracker() {
   const { data: orgMemberships, isLoading: isLoadingOrgMemberships } =
@@ -11,12 +11,11 @@ function TimeTracker() {
     category => category.type === 'people'
   )?.id;
 
-  const yesterday = getYesterdayDate(new Date());
-  const tomorrow = getTomorrowDate(new Date());
+  const today = formatDate(new Date());
 
   const { data: timeEntries, isLoading: isLoadingTimeEntries } = useTimeEntries(
     {
-      params: `filter[after]=${yesterday}&filter[before]=${tomorrow}&filter[person_id]=${personId}`,
+      params: `filter[after]=${today}&filter[before]=${today}&filter[person_id]=${personId}`,
       enabled: !!personId,
     }
   );
