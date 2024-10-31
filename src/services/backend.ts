@@ -32,7 +32,7 @@ function backendService() {
     headers: {
       'X-Auth-Token': accessToken,
       'X-Organization-Id': orgId,
-      contentType: 'application/vnd.api+json',
+      'Content-Type': 'application/vnd.api+json',
     },
   });
 

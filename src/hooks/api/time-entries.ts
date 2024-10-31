@@ -11,6 +11,7 @@ export const useTimeEntries = ({ enabled, params }: UseTimeEntriesProps) => {
     queryKey: ['timeEntries'],
     queryFn: () => getTimeEntries(params),
     enabled: enabled,
+    refetchOnWindowFocus: true,
   });
 };
 
