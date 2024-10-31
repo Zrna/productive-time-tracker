@@ -6,6 +6,7 @@ import { CreateTimeEntry } from '../interfaces/time-entries';
 import { useCreateTimeEntry } from '../hooks/api/time-entries';
 import { useEffect } from 'react';
 import { formatDate } from '../utils/date';
+import { Button } from './Button';
 
 const CreateTimeEntrySchema = z.object({
   serviceId: z.string(),
@@ -47,21 +48,10 @@ export const CreateTimeEntryForm: React.FC<CreateTimeEntryFormProps> = ({
   }, [isTimeEntryCreated]);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '16px',
-        width: '33%',
-        backgroundColor: '#fff',
-        border: '1px solid #dfe5f5',
-        borderRadius: '4px',
-        padding: '8px',
-      }}
-    >
-      <h4>Add New Time Entry</h4>
+    <div className='flex flex-col gap-6 w-1/3 bg-white border border-gray-200 rounded p-2'>
+      <h4 className='text-xl font-semibold'>Add New Time Entry</h4>
       <form
-        style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}
+        className='flex flex-col gap-4'
         onSubmit={handleSubmit(data =>
           createTimeEntry({
             ...data,
@@ -75,6 +65,7 @@ export const CreateTimeEntryForm: React.FC<CreateTimeEntryFormProps> = ({
           name='serviceId'
           register={register}
           isDisabled
+          helperText='Acquiring new clients service ID is hardcoded'
         />
         <FormField
           type='number'
@@ -90,9 +81,11 @@ export const CreateTimeEntryForm: React.FC<CreateTimeEntryFormProps> = ({
           register={register}
           error={errors.note}
         />
-        <button type='submit' disabled={isSubmitting || !isValid}>
-          {isSubmitting ? 'Saving...' : 'Save'}
-        </button>
+        <Button
+          type='submit'
+          isDisabled={isSubmitting || !isValid}
+          text={isSubmitting ? 'Saving...' : 'Save'}
+        />
       </form>
     </div>
   );

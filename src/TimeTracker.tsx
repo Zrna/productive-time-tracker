@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useOrganizationMemberships } from './hooks/api/organization';
 import { useDeleteTimeEntry, useTimeEntries } from './hooks/api/time-entries';
 import { formatDate } from './utils/date';
-import { CreateTimeEntryForm } from './components/CreateTimeEntryForm';
+import { CreateTimeEntryForm, Navbar, TimeEntries } from './components';
 
 function TimeTracker() {
   const { data: orgMemberships, isLoading: isLoadingOrgMemberships } =
@@ -21,8 +21,7 @@ function TimeTracker() {
     }
   );
 
-  const { mutateAsync: deleteTimeEntry, isPending: isDeletingTimeEntry } =
-    useDeleteTimeEntry();
+  const { mutateAsync: deleteTimeEntry } = useDeleteTimeEntry();
 
   const [timeEntryDeletingId, setTimeEntryDeletingId] = useState('');
 
@@ -42,81 +41,16 @@ function TimeTracker() {
 
   return (
     <div>
-      <h1>Productive Time Tracker</h1>
-      {isLoadingOrgMemberships || isLoadingTimeEntries ? (
-        <h3>Loading...</h3>
-      ) : (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: '16px',
-            width: '100%',
-            backgroundColor: '#f7f9fc',
-            padding: '16px',
-          }}
-        >
-          <CreateTimeEntryForm personId={personId} />
-          <div
-            style={{
-              width: '66%',
-              height: '85dvh',
-              overflow: 'auto',
-            }}
-          >
-            {!timeEntries || timeEntries?.data.length === 0 ? (
-              <p>No time entries</p>
-            ) : (
-              timeEntries?.data.map(entry => (
-                <div
-                  key={entry.id}
-                  style={{
-                    position: 'relative',
-                    padding: '8px',
-                  }}
-                >
-                  {isDeletingTimeEntry && timeEntryDeletingId === entry.id && (
-                    <p style={{ position: 'absolute', left: '50%' }}>
-                      Deleting...
-                    </p>
-                  )}
-                  <div
-                    style={{
-                      backgroundColor: '#fff',
-                      border: '1px solid #dfe5f5',
-                      borderRadius: '4px',
-                      padding: '12px',
-                      margin: '8px',
-                      opacity:
-                        isDeletingTimeEntry && timeEntryDeletingId === entry.id
-                          ? 0.5
-                          : 1,
-                    }}
-                  >
-                    <p>Date: {entry.attributes.date}</p>
-                    <p>Time: {entry.attributes.time}</p>
-                    <p>
-                      Note:{' '}
-                      <span
-                        dangerouslySetInnerHTML={{
-                          __html: entry.attributes.note,
-                        }}
-                      />
-                    </p>
-                    <button
-                      onClick={() => handleDelete(entry.id)}
-                      disabled={isDeletingTimeEntry}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      )}
+      <Navbar />
+      <div className='flex items-center gap-16 w-full p-16 h-[90dvh]'>
+        <CreateTimeEntryForm personId={personId} />
+        <TimeEntries
+          timeEntries={timeEntries}
+          onDelete={handleDelete}
+          timeEntryDeletingId={timeEntryDeletingId}
+          isLoading={isLoadingOrgMemberships || isLoadingTimeEntries}
+        />
+      </div>
     </div>
   );
 }

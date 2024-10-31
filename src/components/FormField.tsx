@@ -8,6 +8,7 @@ interface FormFieldProps {
   register: UseFormRegister<any>;
   error?: FieldError | undefined;
   isDisabled?: boolean;
+  helperText?: string;
 }
 
 export const FormField: React.FC<FormFieldProps> = ({
@@ -17,16 +18,23 @@ export const FormField: React.FC<FormFieldProps> = ({
   register,
   error,
   isDisabled,
+  helperText,
 }) => {
   return (
-    <div>
+    <div className='flex flex-col gap-1'>
       <input
+        className='border border-gray-200 rounded p-2 disabled:opacity-50 disabled:cursor-not-allowed'
         disabled={isDisabled}
         type={type}
         placeholder={placeholder}
         {...register(name, { valueAsNumber: type === 'number' })}
       />
-      {error && <span>{error.message}</span>}
+      {helperText && (
+        <span className='text-sm text-gray-600 pl-1'>{helperText}</span>
+      )}
+      {error && (
+        <span className='text-sm text-red-600 pl-1'>{error.message}</span>
+      )}
     </div>
   );
 };
