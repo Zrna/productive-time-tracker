@@ -1,0 +1,10 @@
+# Ignore all HTML files:
+**/*.html
+
+/package.json
+/package-lock.json
+
+/node_modules
+/public
+/build
+

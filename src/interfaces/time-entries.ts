@@ -1,4 +1,4 @@
-import { Attributes, Links, Meta, Relationships } from './common';
+import { Attributes, Links, Meta, Relationships } from "./common";
 
 interface TimeEntriesMeta extends Meta {
   organization_features: {

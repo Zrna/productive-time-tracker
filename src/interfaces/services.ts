@@ -1,4 +1,4 @@
-import { Attributes, Links, Meta, Relationships } from './common';
+import { Attributes, Links, Meta, Relationships } from "./common";
 
 export interface Services {
   data: {

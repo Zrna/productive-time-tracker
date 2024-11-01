@@ -1,10 +1,8 @@
-import { CreateTimeEntry, TimeEntries } from '../interfaces/time-entries';
-import { backend } from '../services/backend';
+import { CreateTimeEntry, TimeEntries } from "../interfaces/time-entries";
+import { backend } from "../services/backend";
 
 export const getTimeEntries = async (params?: string) => {
-  return await backend.get<TimeEntries>(
-    `/time_entries${params ? `?${params}` : ''}`
-  );
+  return await backend.get<TimeEntries>(`/time_entries${params ? `?${params}` : ""}`);
 };
 
 export const deleteTimeEntry = async (id: string) => {
@@ -14,9 +12,9 @@ export const deleteTimeEntry = async (id: string) => {
 export const createTimeEntry = async (data: CreateTimeEntry) => {
   const { note, date, time, personId, serviceId } = data;
 
-  return await backend.post('/time_entries', {
+  return await backend.post("/time_entries", {
     data: {
-      type: 'time_entries',
+      type: "time_entries",
       attributes: {
         note,
         date,
@@ -25,13 +23,13 @@ export const createTimeEntry = async (data: CreateTimeEntry) => {
       relationships: {
         person: {
           data: {
-            type: 'people',
+            type: "people",
             id: personId,
           },
         },
         service: {
           data: {
-            type: 'services',
+            type: "services",
             id: serviceId,
           },
         },
