@@ -50,7 +50,7 @@ export const TimeEntries: React.FC<TimeEntriesProps> = ({
                   Note:{' '}
                   <span
                     dangerouslySetInnerHTML={{
-                      __html: entry.attributes.note,
+                      __html: entry.attributes.note || '<i>No note</i>',
                     }}
                   />
                 </p>

@@ -25,3 +25,24 @@ export interface Meta {
   total_count: number;
   total_pages: number;
 }
+
+export interface ErrorResponse {
+  code: string;
+  config: {};
+  message: string;
+  name: string;
+  request: {};
+  response: {
+    data: {
+      errors: {
+        code: string;
+        detail: string;
+        source: {};
+        status: string;
+        title: string;
+      }[];
+    };
+  };
+  status: number;
+  stack: string;
+}

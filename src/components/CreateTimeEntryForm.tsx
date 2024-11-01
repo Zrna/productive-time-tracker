@@ -53,6 +53,10 @@ export const CreateTimeEntryForm: React.FC<CreateTimeEntryFormProps> = ({
   useEffect(() => {
     if (isTimeEntryCreated) {
       reset();
+
+      if (service) {
+        setValue('serviceId', service.id);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isTimeEntryCreated]);

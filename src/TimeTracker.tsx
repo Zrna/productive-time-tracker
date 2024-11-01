@@ -38,8 +38,7 @@ function TimeTracker() {
     }
 
     setTimeEntryDeletingId(id);
-    await deleteTimeEntry(id);
-    setTimeEntryDeletingId('');
+    await deleteTimeEntry(id).finally(() => setTimeEntryDeletingId(''));
   };
 
   return (
