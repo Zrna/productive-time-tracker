@@ -2,7 +2,7 @@
 
 This is a simple time tracker that helps you to track your work time and add time entries to the [Productive App](https://app.productive.io/) using the Productive API.
 
-https://github.com/user-attachments/assets/c0e24549-b8e4-4ebf-9f32-de80e66f87a9
+https://github.com/user-attachments/assets/d3749ab0-3aea-4619-9b6c-84cd3cbca75f
 
 ## Installation
 
